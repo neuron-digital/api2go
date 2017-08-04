@@ -28,6 +28,11 @@ type MarshalIdentifier interface {
 	GetID() string
 }
 
+// The MarshalMeta interface must be implemented if the struct to be serialized has meta information
+type MarshalMeta interface {
+	GetMeta() map[string]interface{}
+}
+
 // ReferenceID contains all necessary information in order to reference another
 // struct in JSON API.
 type ReferenceID struct {
@@ -203,6 +208,10 @@ func marshalData(element MarshalIdentifier, data *Data, information ServerInform
 	data.Attributes = attributes
 	data.ID = element.GetID()
 	data.Type = getStructType(element)
+
+	if metaMarshaler, ok := element.(MarshalMeta); ok {
+		data.Meta = metaMarshaler.GetMeta()
+	}
 
 	if references, ok := element.(MarshalLinkedRelations); ok {
 		data.Relationships = getStructRelationships(references, information)

@@ -62,7 +62,8 @@ type Links struct {
 type Data struct {
 	Type          string                  `json:"type"`
 	ID            string                  `json:"id"`
-	Attributes    json.RawMessage         `json:"attributes"`
+	Attributes    json.RawMessage         `json:"attributes,omitempty"`
+	Meta          map[string]interface{}  `json:"meta,omitempty"`
 	Relationships map[string]Relationship `json:"relationships,omitempty"`
 	Links         *Links                  `json:"links,omitempty"`
 }

@@ -13,6 +13,11 @@ type UnmarshalIdentifier interface {
 	SetID(string) error
 }
 
+// The UnmarshalMeta interface must be implemented to unmarshal meta information
+type UnmarshalMeta interface {
+	SetMeta(map[string]interface{})
+}
+
 // The UnmarshalToOneRelations interface must be implemented to unmarshal
 // to-one relations.
 type UnmarshalToOneRelations interface {
@@ -167,6 +172,10 @@ func setDataIntoTarget(data *Data, target interface{}) error {
 		if err != nil {
 			return err
 		}
+	}
+
+	if metaUnmarshaler, ok := target.(UnmarshalMeta); ok {
+		metaUnmarshaler.SetMeta(data.Meta)
 	}
 
 	if err := castedTarget.SetID(data.ID); err != nil {
